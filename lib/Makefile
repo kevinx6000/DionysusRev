@@ -1,8 +1,11 @@
 include ../Makefile.inc
 
-SUBDIRS =
+SUBDIRS = network
 
 CFLAGS_PROJECT += -I../include
+
+OBJS = simulator.o
+SUBOBJS = network/*.o
 
 LIBS = libdionysus.a
 
@@ -16,11 +19,11 @@ $(SUBDIRS):
 	$(MAKE) -C $@ $(MAKECMDGOALS)
 	@echo "<===" $@
 
-libdionysus.a: simulator.o
-	$(AR) rsc $@ $^
+libdionysus.a: $(SUBDIRS) $(OBJS)
+	$(AR) rsc $@ $(SUBOBJS) $(OBJS)
 
 %.o: %.cpp
 	$(CXX) $(CFLAGS) -c $<
 
 clean-common::
-	rm -rf $(LIBS) *.o
+	rm -rf $(LIBS) $(OBJS)
